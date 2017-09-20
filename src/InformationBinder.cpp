@@ -9,10 +9,10 @@ InformationBinder::InformationBinder(QQmlApplicationEngine& engine)
     : m_engine(engine)
 {
     // Prepare dummy binding to avoid missing model case for initial load
-
     static QStringList dummyDataList;
     dummyDataList.append("Fetching ...");
 
+    // Set dummy model as context property
     QQmlContext* pContext = engine.rootContext();
     pContext->setContextProperty("myCustomModel", QVariant::fromValue(dummyDataList));
 }
@@ -65,12 +65,14 @@ void InformationBinder::visualizeTabCommon(const QString& tabName, const QUrl& q
 
 void InformationBinder::visualizeCoreInformation(unsigned int coreId, QStandardItemModel& coreDataModel)
 {
+    // Prepare Tab name and pass specified QML template for initialization and binding
     const QString title = "Core " + QString::number(coreId);
     visualizeTabCommon(title, QUrl(QStringLiteral("qrc:/CoreTemplate.qml")), coreDataModel);
 }
 
 void InformationBinder::visualizeStats(QStandardItemModel& statsDataModel)
 {
+    // Prepare Tab name and pass specified QML template for initialization and binding
     const QString title = "CPU Utilization";
     visualizeTabCommon(title, QUrl(QStringLiteral("qrc:/StatsTemplate.qml")), statsDataModel);
 }

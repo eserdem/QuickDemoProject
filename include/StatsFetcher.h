@@ -9,6 +9,7 @@ class QStandardItemModel;
 class QStringList;
 class QTimer;
 
+// Fetches and real-time updates CPU load information for all available cores. Updated data is reflected to Model container
 class StatsFetcher : public QObject
 {
     Q_OBJECT
@@ -27,10 +28,11 @@ public:
     QStandardItemModel* getCoreStats() const;
 
 private:
+        // Global Configuration about how StatFetcher should behave
         enum StatsFetcherConfig
         {
-            StatBufferSize = 5,
-            StatsUpdateRateinMS = 500
+            StatBufferSize      = 5,    // This parameter defines the size of buffer for smoothness of the visualization. Minimum value should be 2
+            StatsUpdateRateinMS = 500   // Defines in Milliseconds how often cpu status is queried from the system
         };
 
 private:
@@ -68,11 +70,17 @@ private:
 
     typedef QMap<int, SCPUUsage>     CoreStatDatabase;
 
+    // Internally used to build database container from provided lines of information
     void buildDatabaseFromCoreInfo(const QStringList& lines, CoreStatDatabase& coreDb);
+
+    // Internally used to construct data model from provided database
     void constructDataModelFromDatabase(const CoreStatDatabase& coreDb);
+
+    // Internally used to fetch cpu stats and fill in the lines container
     void fetchStats(QStringList& lines);
 
 private slots:
+    // Periodically called back to yield data update functionality
     void onCyclicUpdate();
 
 private:

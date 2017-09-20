@@ -1,7 +1,6 @@
 TEMPLATE = app
 
 QT += qml quick
-CONFIG += c++11
 
 SOURCES += src/main.cpp \
     src/InformationFetcher.cpp \

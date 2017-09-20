@@ -14,11 +14,13 @@ StatsFetcher::StatsFetcher(QObject*)
 
 StatsFetcher::~StatsFetcher()
 {
+    // If necessary, cancel cyclic updates
     stopFetchingInfo();
 }
 
 void StatsFetcher::constructDataModelFromDatabase(const CoreStatDatabase& coreDb)
 {
+    // If it is the first time we are called, prepare model object
     if(NULL == m_pCoreStats)
     {
         m_pCoreStats = new QStandardItemModel(coreDb.size(), 5);
@@ -27,10 +29,12 @@ void StatsFetcher::constructDataModelFromDatabase(const CoreStatDatabase& coreDb
     QMap<int, QVariant> mapRoles;
     int currentRow = 0;
 
+    // Loop over availble items in database and establish data insertions/updates
     for(CoreStatDatabase::const_iterator listItr = coreDb.cbegin(); listItr != coreDb.cend(); ++listItr)
     {
         const SCPUUsage& usage = (*listItr);
 
+        // Prepare role-data binding
         mapRoles.insert( Qt::DisplayRole, usage.m_userMode);
         mapRoles.insert( Qt::DecorationRole, usage.m_kernelMode);
         mapRoles.insert( Qt::ToolTipRole, usage.m_other);
@@ -38,12 +42,14 @@ void StatsFetcher::constructDataModelFromDatabase(const CoreStatDatabase& coreDb
 
         QStandardItem* pRowItem = m_pCoreStats->item(currentRow);
 
+        // Only allocate a new item if this was not allocated yet. This will minimize UI load
         if(NULL == pRowItem)
         {
             pRowItem = new QStandardItem();
             m_pCoreStats->setItem(currentRow, pRowItem);
         }
 
+        // Freshly or previously allocated, time to update data on model item
         m_pCoreStats->setItemData(pRowItem->index(), mapRoles);
         currentRow++;
     }
@@ -51,6 +57,7 @@ void StatsFetcher::constructDataModelFromDatabase(const CoreStatDatabase& coreDb
 
 void StatsFetcher::onCyclicUpdate()
 {
+    // We will first get lines for cpu status and get databse prepared from then, finally updating the model
     CoreStatDatabase db;
     QStringList lines;
 
@@ -63,6 +70,7 @@ void StatsFetcher::buildDatabaseFromCoreInfo(const QStringList& lines, CoreStatD
 {
     const int lineCount = lines.size();
 
+    // For each line we will be processing the content
     for(int i = 0; i<lineCount; ++i)
     {
         if(!lines[i].startsWith("cpu"))
@@ -85,6 +93,7 @@ void StatsFetcher::buildDatabaseFromCoreInfo(const QStringList& lines, CoreStatD
             continue;
         }
 
+        // Find out which cpu we are processing now.
         QString cpuString = words[0];
         cpuString.remove(0, 3);
         const int cpuId = cpuString.toInt();
@@ -133,10 +142,12 @@ void StatsFetcher::buildDatabaseFromCoreInfo(const QStringList& lines, CoreStatD
 
 void StatsFetcher::fetchStats(QStringList &lines)
 {
+    // Prepare the process object to run linux system command fetching status data
     QProcess fetchProcess;
     fetchProcess.start("sh", QStringList() << "-c" << "cat /proc/stat");
     fetchProcess.waitForFinished(-1);
 
+    // Linefy obtained result
     QString allResult = fetchProcess.readAllStandardOutput();
     lines = allResult.split(QRegExp("[\r\n]"),QString::SkipEmptyParts);
 }
@@ -146,18 +157,18 @@ void StatsFetcher::startFetchingInfo()
     // we yield first run synchronously here to make sure data is available immediately
     onCyclicUpdate();
 
+    // if not yet created, create timer and configure cyclic update schedule
     if(NULL == m_pTimer)
     {
         m_pTimer = new QTimer();
-
         QObject::connect(m_pTimer, &QTimer::timeout, this, &StatsFetcher::onCyclicUpdate);
-
         m_pTimer->start(StatsUpdateRateinMS);
     }
 }
 
 void StatsFetcher::stopFetchingInfo()
 {
+    // If not yet deallocated, stop the timer and deallocate timer object
     if(m_pTimer)
     {
         m_pTimer->stop();
