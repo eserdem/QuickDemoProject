@@ -62,7 +62,7 @@ Item {
             role: "display"
             title: "User Space"
             resizable: false
-            width: (tableView.width - coreColumn.width) / 4
+            width: (tableView.width - coreColumn.width) / 4 - 1
             delegate: percentageViewDelegate
         }
 
@@ -70,23 +70,23 @@ Item {
             role: "decoration"
             title: "Kernel Space"
             resizable: false
-            width: (tableView.width - coreColumn.width) / 4
+            width: (tableView.width - coreColumn.width) / 4 - 1
             delegate: percentageViewDelegate
         }
 
         TableViewColumn {
             role: "toolTip"
-            title: "Other"
+            title: "Other Operations"
             resizable: false
-            width: (tableView.width - coreColumn.width) / 4
+            width: (tableView.width - coreColumn.width) / 4 - 1
             delegate: percentageViewDelegate
         }
 
         TableViewColumn {
             role: "statusTip"
-            title: "Idle"
+            title: "Idle Time"
             resizable: false
-            width: (tableView.width - coreColumn.width) / 4
+            width: (tableView.width - coreColumn.width) / 4 - 1
             delegate: percentageViewDelegate
         }
 

@@ -5,23 +5,23 @@ import QtQuick.Controls 1.5
 
 Window {
     visible: true
-    width: 640
+    width: 660
     height: 480
     title: qsTr("CPU Information Visualizer")
 
     TabView {
         objectName: "tabView"
         id: tabView
-        x: 18
-        y: 92
+        x: 20
+        y: 90
         anchors.right: parent.right
-        anchors.rightMargin: 18
+        anchors.rightMargin: 15
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 8
+        anchors.bottomMargin: 15
         anchors.top: parent.top
-        anchors.topMargin: 92
+        anchors.topMargin: 90
         anchors.left: parent.left
-        anchors.leftMargin: 18
+        anchors.leftMargin: 15
 
     }
 
@@ -29,15 +29,16 @@ Window {
         id: text1
         x: 80
         y: 26
-        width: 336
+        width: 340
         height: 60
         text: qsTr("CPU Information Visualizer")
+        font.bold: true
         anchors.top: parent.top
         anchors.topMargin: 26
         anchors.left: parent.left
         anchors.leftMargin: 80
         font.family: "Verdana"
-        font.pixelSize: 17
+        font.pixelSize: 20
     }
 
     Image {
@@ -59,5 +60,15 @@ Window {
         sourceSize.height: 200
         sourceSize.width: 200
         source: "unnamed.png"
+    }
+
+    Text {
+        id: text2
+        x: 81
+        y: 55
+        width: 340
+        height: 20
+        text: qsTr("Linux OS CPU Information Visualization")
+        font.pixelSize: 12
     }
 }

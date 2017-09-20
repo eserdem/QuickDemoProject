@@ -24,13 +24,14 @@ Item {
             role: "display"
             title: "Key"
             width: 150
-            resizable: false
+            resizable: true
         }
 
         TableViewColumn {
             role: "decoration"
             title: "Value"
-            width: item1.width - keyColumn.width
+            width: tableView.width - keyColumn.width - 20
+            resizable: true
         }
 
         model: myCustomModel
