@@ -15,11 +15,8 @@ public:
     // Starts fetching cpu usage information prepares information data available. Data can be used after this point
     void startFetchingInfo();
 
-    // Returns number of availble CPU cores
-    int getCoreCount() const;
-
-    // For given CPU core, returns data model containing usage data
-    QStandardItemModel* getCoreStat(int coreIndex) const;
+    // Returns data model containing core stats data
+    QStandardItemModel* getCoreStats() const;
 
 private:
     struct SCPUUsage
@@ -44,7 +41,7 @@ private:
     void constructDataModelFromDatabse(const CoreStatDatabase& coreDb);
 
 private:
-    QList<QStandardItemModel*>  m_coreInfos;
+    QStandardItemModel* m_pCoreStats;
 
 
 

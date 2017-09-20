@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 
 StatsFetcher::StatsFetcher()
+: m_pCoreStats(NULL)
 {
 }
 
@@ -15,19 +16,32 @@ StatsFetcher::~StatsFetcher()
 
 void StatsFetcher::constructDataModelFromDatabse(const CoreStatDatabase& coreDb)
 {
-    int currentModelIndex = 0;
+    if(NULL == m_pCoreStats)
+    {
+        m_pCoreStats = new QStandardItemModel(coreDb.size(), 5);
+    }
+
+    QMap<int, QVariant> mapRoles;
+    int currentRow = 0;
+
     for(CoreStatDatabase::const_iterator listItr = coreDb.cbegin(); listItr != coreDb.cend(); ++listItr)
     {
+        const SCPUUsage& usage = (*listItr);
+        const QString name = "CPU " + QString::number(currentRow);
 
-        currentModelIndex++;
+        mapRoles.insert( Qt::DisplayRole, name);
+        mapRoles.insert( Qt::DecorationRole, usage.m_userMode);
+        mapRoles.insert( Qt::EditRole, usage.m_kernelMode);
+        mapRoles.insert( Qt::ToolTipRole, usage.m_other);
+        mapRoles.insert( Qt::StatusTipRole, usage.m_idle);
+
+        QStandardItem* pRowItem = new QStandardItem();
+
+        m_pCoreStats->setItem(currentRow, pRowItem);
+        m_pCoreStats->setItemData(pRowItem->index(), mapRoles);
+
+        currentRow++;
     }
-
-    // Empty remaining
-    for(int i = currentModelIndex; i < m_coreInfos.size(); i++)
-    {
-        m_coreInfos[currentModelIndex]->clear();
-    }
-
 }
 
 void StatsFetcher::buildDatabaseFromCoreInfo(const QStringList& lines, CoreStatDatabase& coreDb)
@@ -92,17 +106,7 @@ void StatsFetcher::startFetchingInfo()
     constructDataModelFromDatabse(db);
 }
 
-int StatsFetcher::getCoreCount() const
+QStandardItemModel* StatsFetcher::getCoreStats() const
 {
-    return m_coreInfos.size();
-}
-
-QStandardItemModel* StatsFetcher::getCoreStat(int coreIndex) const
-{
-    if(coreIndex < m_coreInfos.size())
-    {
-        return m_coreInfos[coreIndex];
-    }
-
-    return NULL;
+    return m_pCoreStats;
 }
