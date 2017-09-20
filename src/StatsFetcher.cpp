@@ -14,7 +14,7 @@ StatsFetcher::~StatsFetcher()
 {
 }
 
-void StatsFetcher::constructDataModelFromDatabse(const CoreStatDatabase& coreDb)
+void StatsFetcher::constructDataModelFromDatabase(const CoreStatDatabase& coreDb)
 {
     if(NULL == m_pCoreStats)
     {
@@ -103,7 +103,7 @@ void StatsFetcher::startFetchingInfo()
 
     CoreStatDatabase db;
     buildDatabaseFromCoreInfo(lines, db);
-    constructDataModelFromDatabse(db);
+    constructDataModelFromDatabase(db);
 }
 
 QStandardItemModel* StatsFetcher::getCoreStats() const

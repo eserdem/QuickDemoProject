@@ -29,7 +29,7 @@ private:
     typedef QList<CoreInfoList>     CoreDatabase;
 
     void buildDatabaseFromCoreInfo(const QStringList& lines, CoreDatabase& coreDb);
-    void constructDataModelFromDatabse(const CoreDatabase& coreDb);
+    void constructDataModelFromDatabase(const CoreDatabase& coreDb);
 
 private:
     QList<QStandardItemModel*>  m_coreInfos;

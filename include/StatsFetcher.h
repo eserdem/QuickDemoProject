@@ -38,7 +38,7 @@ private:
     typedef QMap<int, SCPUUsage>     CoreStatDatabase;
 
     void buildDatabaseFromCoreInfo(const QStringList& lines, CoreStatDatabase& coreDb);
-    void constructDataModelFromDatabse(const CoreStatDatabase& coreDb);
+    void constructDataModelFromDatabase(const CoreStatDatabase& coreDb);
 
 private:
     QStandardItemModel* m_pCoreStats;

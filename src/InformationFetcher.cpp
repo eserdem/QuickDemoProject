@@ -13,7 +13,7 @@ InformationFetcher::~InformationFetcher()
 {
 }
 
-void InformationFetcher::constructDataModelFromDatabse(const CoreDatabase& coreDb)
+void InformationFetcher::constructDataModelFromDatabase(const CoreDatabase& coreDb)
 {
     int currentModelIndex = 0;
     int currentRow = 0;
@@ -98,7 +98,7 @@ void InformationFetcher::fetchCpuInfo()
 
     CoreDatabase db;
     buildDatabaseFromCoreInfo(lines, db);
-    constructDataModelFromDatabse(db);
+    constructDataModelFromDatabase(db);
 }
 
 int InformationFetcher::getCoreCount() const
