@@ -56,14 +56,13 @@ void InformationFetcher::constructDataModelFromDatabase(const CoreDatabase& core
     {
         m_coreInfos[currentModelIndex]->clear();
     }
-
 }
 
 void InformationFetcher::buildDatabaseFromCoreInfo(const QStringList& lines, CoreDatabase& coreDb)
 {
     // Find out how many lines will need processing
     const int lineCount = lines.size();
-    CoreInfoList* pCurrentList = 0;
+    CoreInfoList* pCurrentList = NULL;
 
     // Iterate through all lines
     for(int i = 0; i<lineCount; ++i)

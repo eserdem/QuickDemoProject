@@ -20,6 +20,12 @@ StatsFetcher::~StatsFetcher()
 
 void StatsFetcher::constructDataModelFromDatabase(const CoreStatDatabase& coreDb)
 {
+    // If we failed to fetch any data, we can skip data model creation as well
+    if(0 == coreDb.size())
+    {
+        return;
+    }
+
     // If it is the first time we are called, prepare model object
     if(NULL == m_pCoreStats)
     {

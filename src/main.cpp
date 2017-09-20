@@ -23,7 +23,10 @@ int main(int argc, char *argv[])
     const int coreCount = cpuinfoSource.getCoreCount();
     for(int currCore = 0; currCore < coreCount; currCore++)
     {
-        binder.visualizeCoreInformation(currCore, *cpuinfoSource.getCoreInfo(currCore));
+        if(QStandardItemModel* pItemModel = cpuinfoSource.getCoreInfo(currCore))
+        {
+            binder.visualizeCoreInformation(currCore, *pItemModel);
+        }
     }
 
     // Prepare cpu status fetcher, set it up and get it to cyclic running state
@@ -31,7 +34,10 @@ int main(int argc, char *argv[])
     statsSource.startFetchingInfo();
 
     // Bind model of cyclic-updated status data to view
-    binder.visualizeStats(*statsSource.getCoreStats());
+    if(QStandardItemModel* pItemModel = statsSource.getCoreStats())
+    {
+        binder.visualizeStats(*pItemModel);
+    }
 
     return app.exec();
 }

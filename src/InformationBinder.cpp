@@ -14,14 +14,23 @@ InformationBinder::InformationBinder(QQmlApplicationEngine& engine)
 
     // Set dummy model as context property
     QQmlContext* pContext = engine.rootContext();
-    pContext->setContextProperty("myCustomModel", QVariant::fromValue(dummyDataList));
+    if(pContext)
+    {
+        pContext->setContextProperty("myCustomModel", QVariant::fromValue(dummyDataList));
+    }
 }
 
 void InformationBinder::visualizeTabCommon(const QString& tabName, const QUrl& qmlTemplate, QStandardItemModel& coreDataModel)
 {
     // Find the special view where tabs can be hooked under
-    QObject* pTabViewObject = m_engine.rootObjects().first()->findChild<QObject*>("tabView");
+    QObject* pFirstRootObject = m_engine.rootObjects().first();
+    if(!pFirstRootObject)
+    {
+        // Initial QML loading probably went wrong
+        return;
+    }
 
+    QObject* pTabViewObject = pFirstRootObject->findChild<QObject*>("tabView");
     if(!pTabViewObject)
     {
         // Binding couldn't found from UI side
@@ -31,7 +40,6 @@ void InformationBinder::visualizeTabCommon(const QString& tabName, const QUrl& q
     // Load Tab Template
     QQmlComponent tabComponent(&m_engine, qmlTemplate);
     QVariant returnedValue;
-
 
     // Insert the tab loaded from template
     QMetaObject::invokeMethod(pTabViewObject, "addTab",
