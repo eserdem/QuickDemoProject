@@ -3,6 +3,8 @@ This is a test project to get familiar with QTQuick usage. Application also uses
 
 Application visualizes information about host CPU, providing detailed information about its cores. Data is gathered via `proc/cpuinfo` file on Linux. Information about each Core of the CPU is shown on a seperate Tab on a TabView. Each tab consists of a TableView, where key-value pairs of CPU Cores are listed.
 
+<p align="center"><img src="images/cpuinfo.png" alt="Image showing CPU Core Data Visualization" width="300px"> <img src="images/cpustat.png" alt="Image showing CPU Utilization Visualization" width="300px"></p>
+
 As an extension to the original idea, a special tab provides real-time information about current CPU Utilization. Information is gathered by continously reading data from `/proc/stat` and using a set of buffers to calculate delta changes on CPU cycle usages for different usage groups - per CPU Core respectively. In addition to numerical visualization, a colored rectangular shape helps the intuative perception of the percentage values.
 
 # Prerequisities for Building
@@ -68,7 +70,7 @@ Except using main.qml for general layouting, there are 2 main dynamic usages of 
 
 Due to its learning-oriented culture, this project yet unfortunately doesn't utilize any sort of test for acceptance. Due to relatively good seperation of function domains in this project, tests can be introduced easily and each and every class can be tested independently.
 
-As a small hint, Linux command stress can be used to emulate CPU loads to check if CPU Utilization function is working correctly. Command can be installed and used as shown below:
+As a small hint, Linux command `stress` can be used to emulate CPU loads to check if CPU Utilization function is working correctly. Command can be installed and used as shown below:
 
     sudo apt-get install stress
     stress --cpu 4 --timeout 10  // Emulate stress on 4 cores for 10 Seconds
