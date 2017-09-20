@@ -89,21 +89,45 @@ void StatsFetcher::buildDatabaseFromCoreInfo(const QStringList& lines, CoreStatD
         cpuString.remove(0, 3);
         const int cpuId = cpuString.toInt();
 
-        const int usageUserNormal = words[1].toInt();
-        const int usageUserNice   = words[2].toInt();
-        const int usageKernel     = words[3].toInt();
-        const int usageIdle       = words[4].toInt();
-        const int usageIOWait     = words[5].toInt();
-        const int usageIrq        = words[6].toInt();
-        const int usageSoftIrq    = words[7].toInt();
+        // Adjust buffer size if necessary
+        if(!(m_buffers[0].size() > cpuId))
+        {
+            for(int j=0; j<StatBufferSize; ++j)
+            {
+                m_buffers[j].resize(cpuId+1);
+            }
+        }
 
-        const int totalSum = usageUserNormal + usageUserNice + usageKernel + usageIdle + usageIOWait + usageIrq + usageSoftIrq;
+        // Cycle buffer ring
+        for(int j=(StatBufferSize-1); j>0; --j)
+        {
+            m_buffers[j][cpuId] = m_buffers[j-1][cpuId];
+        }
 
+        // Easy reading helpers
+        SCPUUsageRaw& thisCpuRawUsageCurrent = m_buffers[0][cpuId];
+        const SCPUUsageRaw& thisCpuRawUsagePrev = m_buffers[StatBufferSize-1][cpuId];
+
+        // Store current stats
+        thisCpuRawUsageCurrent.m_idle = words[4].toInt();
+        thisCpuRawUsageCurrent.m_other = words[5].toInt() + words[6].toInt() + words[7].toInt();
+        thisCpuRawUsageCurrent.m_kernelMode = words[3].toInt();
+        thisCpuRawUsageCurrent.m_userMode = words[1].toInt() + words[2].toInt();
+
+        // Get Diff stats
+        const int diffIdle = thisCpuRawUsageCurrent.m_idle - thisCpuRawUsagePrev.m_idle;
+        const int diffOther = thisCpuRawUsageCurrent.m_other - thisCpuRawUsagePrev.m_other;
+        const int diffKernel = thisCpuRawUsageCurrent.m_kernelMode - thisCpuRawUsagePrev.m_kernelMode;
+        const int diffUser = thisCpuRawUsageCurrent.m_userMode - thisCpuRawUsagePrev.m_userMode;
+
+        const int diffSum = diffIdle + diffOther + diffKernel + diffUser;
+
+        // Prepare floating point values
         SCPUUsage& usage = coreDb[cpuId];
-        usage.m_idle = (usageIdle * 100.f) / totalSum;
-        usage.m_other = ((usageIOWait + usageIrq + usageSoftIrq) * 100.f) / totalSum;
-        usage.m_kernelMode = (usageKernel * 100.f) / totalSum;
-        usage.m_userMode = ((usageUserNormal + usageUserNice) * 100.f) / totalSum;
+        usage.m_idle = (diffIdle * 100.f) / diffSum;
+        usage.m_other = (diffOther * 100.f) / diffSum;
+        usage.m_kernelMode = (diffKernel * 100.f) / diffSum;
+        usage.m_userMode = (diffUser * 100.f) / diffSum;
     }
 }
 
@@ -128,7 +152,7 @@ void StatsFetcher::startFetchingInfo()
 
         QObject::connect(m_pTimer, &QTimer::timeout, this, &StatsFetcher::onCyclicUpdate);
 
-        m_pTimer->start(1000);
+        m_pTimer->start(StatsUpdateRateinMS);
     }
 }
 
