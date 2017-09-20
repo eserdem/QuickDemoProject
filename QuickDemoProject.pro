@@ -2,6 +2,8 @@ TEMPLATE = app
 
 QT += qml quick
 
+CONFIG += debug_and_release
+
 SOURCES += src/main.cpp \
     src/InformationFetcher.cpp \
     src/InformationBinder.cpp \

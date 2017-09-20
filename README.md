@@ -17,6 +17,22 @@ This application uses QTQuick and QTQuick Controls, where development was based 
 * QTCreator 4.0.2 (qmake)
 * GCC, make
 
+Once you have the requirements, you can open the project file `QuickDemoProject.pro` with QTCreator and Build & Run.
+
+### Building without QTCreator
+
+`QuickDemoProject.pro` project file still needs to be processed by QMake to generate Make files. Following commands can be followed to compile the application without having to open QTCreator (assuming you are in project folder):
+
+    mkdir build
+    cd build
+    qmake ../QuickDemoProject.pro
+
+then
+
+    make                      // Defaults to Release, or
+    make -f Makefile.Release  // or
+    make -f Makefile.Debug
+
 # Development Environment
 Development of this project has been established on a Microsoft Windows 10 64-bit Machine, making use of a Virtual Machine image running on free version of [VMWare Player 12](https://www.vmware.com/go/downloadplayer). VMWare Player OS image containing the Ubuntu 16.10 OS can be obtained at [osboxes.org](http://www.osboxes.org/ubuntu/#ubuntu-16-10-vmware). Enabling full VM support on Microsoft Windows 10 OS will require [extra steps](https://kb.vmware.com/kb/2146361).
 
