@@ -19,7 +19,7 @@ Window {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 15
         anchors.top: parent.top
-        anchors.topMargin: 90
+        anchors.topMargin: 80
         anchors.left: parent.left
         anchors.leftMargin: 15
 
@@ -28,13 +28,13 @@ Window {
     Text {
         id: text1
         x: 80
-        y: 26
+        y: 20
         width: 340
         height: 60
         text: qsTr("CPU Information Visualizer")
         font.bold: true
         anchors.top: parent.top
-        anchors.topMargin: 26
+        anchors.topMargin: 15
         anchors.left: parent.left
         anchors.leftMargin: 80
         font.family: "Verdana"
@@ -44,12 +44,12 @@ Window {
     Image {
         id: image2
         x: 20
-        y: 24
+        y: 20
         width: 42
         height: 44
         transformOrigin: Item.Center
         anchors.top: parent.top
-        anchors.topMargin: 24
+        anchors.topMargin: 15
         anchors.left: parent.left
         anchors.leftMargin: 20
         fillMode: Image.PreserveAspectFit
@@ -65,7 +65,7 @@ Window {
     Text {
         id: text2
         x: 81
-        y: 55
+        y: 45
         width: 340
         height: 20
         text: qsTr("Linux OS CPU Information Visualization")

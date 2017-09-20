@@ -16,7 +16,7 @@ Item {
                 anchors.topMargin: 2
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignRight
-                text: typeof(styleData.value) == "number" ? styleData.value.toFixed(2) : styleData.value;
+                text: typeof(styleData.value) == "number" ? styleData.value.toFixed(2) + " %" : styleData.value;
 
                 Rectangle {
                     id: percentageViz
