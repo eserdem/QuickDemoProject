@@ -3,24 +3,27 @@
 
 #include "InformationBinder.h"
 #include "InformationFetcher.h"
+#include "StatsFetcher.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-
-    InformationFetcher fetcher;
     InformationBinder binder(engine);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
-    fetcher.fetchCpuInfo();
-    const int coreCount = fetcher.getCoreCount();
+    InformationFetcher cpuinfoSource;
+    cpuinfoSource.fetchCpuInfo();
 
+    const int coreCount = cpuinfoSource.getCoreCount();
     for(int currCore = 0; currCore < coreCount; currCore++)
     {
-        binder.visualizeCoreInformation(currCore, *fetcher.getCoreInfo(currCore));
+        binder.visualizeCoreInformation(currCore, *cpuinfoSource.getCoreInfo(currCore));
     }
+
+    StatsFetcher statsSource;
+    statsSource.startFetchingInfo();
 
     return app.exec();
 }

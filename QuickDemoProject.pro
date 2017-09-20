@@ -5,7 +5,8 @@ CONFIG += c++11
 
 SOURCES += src/main.cpp \
     src/InformationFetcher.cpp \
-    src/InformationBinder.cpp
+    src/InformationBinder.cpp \
+    src/StatsFetcher.cpp
 
 RESOURCES += resources/qml.qrc
 
@@ -19,4 +20,5 @@ include(deployment.pri)
 
 HEADERS += \
     include/InformationFetcher.h \
-    include/InformationBinder.h
+    include/InformationBinder.h \
+    include/StatsFetcher.h
