@@ -30,7 +30,7 @@ private:
     typedef QList<CoreInfoList>     CoreDatabase;
 
     // Internally used to build core information database from provided series of lines
-    void buildDatabaseFromCoreInfo(const QStringList& lines, CoreDatabase& coreDb);
+    static void buildDatabaseFromCoreInfo(const QStringList& lines, CoreDatabase& coreDb);
 
     // Internally used to construct Data Model from provided database container
     void constructDataModelFromDatabase(const CoreDatabase& coreDb);
