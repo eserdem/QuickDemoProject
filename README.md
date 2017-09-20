@@ -56,16 +56,6 @@ For each CPU Core `void InformationBinder::visualizeCoreInformation(unsigned int
 
 Once cyclic fetches start, Model provided by StatsFetcher can also be shown in its special Tab by calling `void InformationBinder::visualizeStats(QStandardItemModel& statsDataModel)`. After establishing the binding, data updates do happen automatically as StatsFetcher modifies the Model object continously.
 
-### Testing
-
-Due to its learning-oriented culture, this project yet unfortunately doesn't utilize any sort of test for acceptance. Due to relatively good seperation of function domains in this project, tests can be introduced easily and each and every class can be tested independently.
-
-As a small hint, Linux command stress can be used to emulate CPU loads to check if CPU Utilization function is working correctly. Command can be installed and used as shown below:
-
-    sudo apt-get install stress
-    stress --cpu 4 --timeout 10  // Emulate stress on 4 cores for 10 Seconds
-
-
 ### QML Templates & Visualization
 
 Except using main.qml for general layouting, there are 2 main dynamic usages of QML in this project
@@ -74,9 +64,18 @@ Except using main.qml for general layouting, there are 2 main dynamic usages of 
 
 * For percentage visualization on CPU Utilization tab, a delegate approach is used. In this small custom delegate code, data is simply processed and a rectangule shape is accordingly modified to achieve this numeric presentation.
 
+# Testing
+
+Due to its learning-oriented culture, this project yet unfortunately doesn't utilize any sort of test for acceptance. Due to relatively good seperation of function domains in this project, tests can be introduced easily and each and every class can be tested independently.
+
+As a small hint, Linux command stress can be used to emulate CPU loads to check if CPU Utilization function is working correctly. Command can be installed and used as shown below:
+
+    sudo apt-get install stress
+    stress --cpu 4 --timeout 10  // Emulate stress on 4 cores for 10 Seconds
 
 # Known Issues
 Below are the known issues of the application
+* For CPU Core Information TableViews, a fixed width had to be used due to a bug in QT: QtQuick TableView resizeColumnsToContents doesn't work when columns are added dynamically. Details: https://bugreports.qt.io/browse/QTBUG-58594
 * Due to a known isssue in QT, usage of TableView component causes the "QML Item: Binding loop detected for property 'width'" message although there is no such dependency loop in width usage in the application. Details: https://bugreports.qt.io/browse/QTBUG-50605
 
 
