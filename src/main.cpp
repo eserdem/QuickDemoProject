@@ -25,5 +25,7 @@ int main(int argc, char *argv[])
     StatsFetcher statsSource;
     statsSource.startFetchingInfo();
 
+    binder.visualizeStats(*statsSource.getCoreStats());
+
     return app.exec();
 }

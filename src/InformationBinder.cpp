@@ -17,7 +17,7 @@ InformationBinder::InformationBinder(QQmlApplicationEngine& engine)
     pContext->setContextProperty("myCustomModel", QVariant::fromValue(dummyDataList));
 }
 
-void InformationBinder::visualizeCoreInformation(unsigned int coreId, QStandardItemModel& coreDataModel)
+void InformationBinder::visualizeTabCommon(const QString& tabName, const QUrl& qmlTemplate, QStandardItemModel& coreDataModel)
 {
     // Find the special view where tabs can be hooked under
     QObject* pTabViewObject = m_engine.rootObjects().first()->findChild<QObject*>("tabView");
@@ -29,15 +29,14 @@ void InformationBinder::visualizeCoreInformation(unsigned int coreId, QStandardI
     }
 
     // Load Tab Template
-    QQmlComponent tabComponent(&m_engine, QUrl(QStringLiteral("qrc:/TabTemplate.qml")));
-
+    QQmlComponent tabComponent(&m_engine, qmlTemplate);
     QVariant returnedValue;
-    QVariant title = "Core " + QString::number(coreId);
+
 
     // Insert the tab loaded from template
     QMetaObject::invokeMethod(pTabViewObject, "addTab",
         Q_RETURN_ARG(QVariant, returnedValue),
-        Q_ARG(QVariant, title), Q_ARG(QVariant, QVariant::fromValue(&tabComponent)));
+        Q_ARG(QVariant, tabName), Q_ARG(QVariant, QVariant::fromValue(&tabComponent)));
 
     // From instantiated tab, get returned tab object
     QObject* pTabObject = qvariant_cast<QObject*>(returnedValue);
@@ -62,5 +61,16 @@ void InformationBinder::visualizeCoreInformation(unsigned int coreId, QStandardI
 
     // Assigned provided model
     pTableObject->setProperty("model", QVariant::fromValue(&coreDataModel));
+}
 
+void InformationBinder::visualizeCoreInformation(unsigned int coreId, QStandardItemModel& coreDataModel)
+{
+    const QString title = "Core " + QString::number(coreId);
+    visualizeTabCommon(title, QUrl(QStringLiteral("qrc:/CoreTemplate.qml")), coreDataModel);
+}
+
+void InformationBinder::visualizeStats(QStandardItemModel& statsDataModel)
+{
+    const QString title = "CPU Utilization";
+    visualizeTabCommon(title, QUrl(QStringLiteral("qrc:/StatsTemplate.qml")), statsDataModel);
 }

@@ -27,11 +27,9 @@ void StatsFetcher::constructDataModelFromDatabase(const CoreStatDatabase& coreDb
     for(CoreStatDatabase::const_iterator listItr = coreDb.cbegin(); listItr != coreDb.cend(); ++listItr)
     {
         const SCPUUsage& usage = (*listItr);
-        const QString name = "CPU " + QString::number(currentRow);
 
-        mapRoles.insert( Qt::DisplayRole, name);
-        mapRoles.insert( Qt::DecorationRole, usage.m_userMode);
-        mapRoles.insert( Qt::EditRole, usage.m_kernelMode);
+        mapRoles.insert( Qt::DisplayRole, usage.m_userMode);
+        mapRoles.insert( Qt::DecorationRole, usage.m_kernelMode);
         mapRoles.insert( Qt::ToolTipRole, usage.m_other);
         mapRoles.insert( Qt::StatusTipRole, usage.m_idle);
 
