@@ -4,14 +4,17 @@
 #include <QStringList>
 #include <QRegularExpression>
 #include <QStandardItemModel>
+#include <QTimer>
 
-StatsFetcher::StatsFetcher()
+StatsFetcher::StatsFetcher(QObject*)
 : m_pCoreStats(NULL)
+, m_pTimer(NULL)
 {
 }
 
 StatsFetcher::~StatsFetcher()
 {
+    stopFetchingInfo();
 }
 
 void StatsFetcher::constructDataModelFromDatabase(const CoreStatDatabase& coreDb)
@@ -33,13 +36,27 @@ void StatsFetcher::constructDataModelFromDatabase(const CoreStatDatabase& coreDb
         mapRoles.insert( Qt::ToolTipRole, usage.m_other);
         mapRoles.insert( Qt::StatusTipRole, usage.m_idle);
 
-        QStandardItem* pRowItem = new QStandardItem();
+        QStandardItem* pRowItem = m_pCoreStats->item(currentRow);
 
-        m_pCoreStats->setItem(currentRow, pRowItem);
+        if(NULL == pRowItem)
+        {
+            pRowItem = new QStandardItem();
+            m_pCoreStats->setItem(currentRow, pRowItem);
+        }
+
         m_pCoreStats->setItemData(pRowItem->index(), mapRoles);
-
         currentRow++;
     }
+}
+
+void StatsFetcher::onCyclicUpdate()
+{
+    CoreStatDatabase db;
+    QStringList lines;
+
+    fetchStats(lines);
+    buildDatabaseFromCoreInfo(lines, db);
+    constructDataModelFromDatabase(db);
 }
 
 void StatsFetcher::buildDatabaseFromCoreInfo(const QStringList& lines, CoreStatDatabase& coreDb)
@@ -90,18 +107,39 @@ void StatsFetcher::buildDatabaseFromCoreInfo(const QStringList& lines, CoreStatD
     }
 }
 
-void StatsFetcher::startFetchingInfo()
+void StatsFetcher::fetchStats(QStringList &lines)
 {
     QProcess fetchProcess;
     fetchProcess.start("sh", QStringList() << "-c" << "cat /proc/stat");
     fetchProcess.waitForFinished(-1);
 
     QString allResult = fetchProcess.readAllStandardOutput();
-    QStringList lines = allResult.split(QRegExp("[\r\n]"),QString::SkipEmptyParts);
+    lines = allResult.split(QRegExp("[\r\n]"),QString::SkipEmptyParts);
+}
 
-    CoreStatDatabase db;
-    buildDatabaseFromCoreInfo(lines, db);
-    constructDataModelFromDatabase(db);
+void StatsFetcher::startFetchingInfo()
+{
+    // we yield first run synchronously here to make sure data is available immediately
+    onCyclicUpdate();
+
+    if(NULL == m_pTimer)
+    {
+        m_pTimer = new QTimer();
+
+        QObject::connect(m_pTimer, &QTimer::timeout, this, &StatsFetcher::onCyclicUpdate);
+
+        m_pTimer->start(1000);
+    }
+}
+
+void StatsFetcher::stopFetchingInfo()
+{
+    if(m_pTimer)
+    {
+        m_pTimer->stop();
+        delete m_pTimer;
+        m_pTimer = NULL;
+    }
 }
 
 QStandardItemModel* StatsFetcher::getCoreStats() const
