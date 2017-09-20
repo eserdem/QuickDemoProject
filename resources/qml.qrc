@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="main.qml">../qml/main.qml</file>
+        <file alias="TabTemplate.qml">../qml/TabTemplate.qml</file>
+	<file>unnamed.png</file>
+    </qresource>
+</RCC>
