@@ -45,4 +45,8 @@ This class does low level communication to host and prepares DataModel which wil
 
 This class connects the data model to the view component, and allocates the UI elements as necessary to achieve correct data visualization.
 
+# Known Issues
+Below are the known issues of the application
+* Due to a known isssue in QT, usage of TableView component causes the "QML Item: Binding loop detected for property 'width'" message although there is no such dependency loop in width usage in the application. Details: https://bugreports.qt.io/browse/QTBUG-50605
+
 

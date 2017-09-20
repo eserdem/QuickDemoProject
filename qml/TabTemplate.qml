@@ -30,7 +30,7 @@ Item {
         TableViewColumn {
             role: "decoration"
             title: "Value"
-            //width: item1.width - keyColumn.width
+            width: item1.width - keyColumn.width
         }
 
         Component.onCompleted:
