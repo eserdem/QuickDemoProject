@@ -121,7 +121,7 @@ int InformationFetcher::getCoreCount() const
 
 QStandardItemModel* InformationFetcher::getCoreInfo(int coreIndex) const
 {
-    if(coreIndex < m_coreInfos.size())
+    if(coreIndex >= 0 && coreIndex < m_coreInfos.size())
     {
         return m_coreInfos[coreIndex];
     }
